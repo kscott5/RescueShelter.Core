@@ -1,0 +1,32 @@
+{
+  "name": "RescueShelter.Core",
+  "version": "1.0.0",
+  "description": "Rescue Shelter Common Reports and Services functionality ",
+  "main": "index.js",
+  "repository": "https://github.com/kscott5/RescueShelter.Core",
+  "author": "Karega K. Scott <kkscott@outlook.com>",
+  "license": "LGPL-3.0-or-later",
+  "private": false,
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^3.23.3",
+    "mongodb": "^3.5.9",
+    "mongoose": "^5.9.25",
+    "morgan": "^1.10.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.0",
+    "@types/express": "^4.17.7",
+    "@types/helmet": "^0.0.47",
+    "@types/mongodb": "^3.5.25",
+    "@types/mongoose": "^5.7.32",
+    "@types/morgan": "^1.9.1",
+    "typescript": "^3.9.7"
+  },
+  "scripts": {
+    "compile": "tsc -p tsconfig.json"
+  }
+}
