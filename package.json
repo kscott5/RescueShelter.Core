@@ -1,5 +1,5 @@
 {
-  "name": "RescueShelter.Core",
+  "name": "rescueSheore",
   "version": "1.0.0",
   "description": "Rescue Shelter Common Reports and Services functionality ",
   "main": "index.js",
@@ -27,6 +27,7 @@
     "typescript": "^3.9.7"
   },
   "scripts": {
-    "compile": "tsc -p tsconfig.json"
+    "compile": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist"
   }
 }
