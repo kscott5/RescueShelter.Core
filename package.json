@@ -28,7 +28,7 @@
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "compile": "yarn clean & tsc -p tsconfig.json"
-
+    "compile": "yarn clean & tsc -p tsconfig.json",
+    "build": "cp ./src ./dist/ -r & cp ./public ./dist/ -r & cp README.MD ./dist/ & cp package.json ./dist/"
   }
 }
