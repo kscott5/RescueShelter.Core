@@ -27,7 +27,8 @@
     "typescript": "^3.9.7"
   },
   "scripts": {
-    "compile": "tsc -p tsconfig.json",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "compile": "yarn clean & tsc -p tsconfig.json"
+
   }
 }
