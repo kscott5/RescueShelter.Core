@@ -15,7 +15,9 @@
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.25",
     "morgan": "^1.10.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.0",
@@ -24,6 +26,7 @@
     "@types/mongodb": "^3.5.25",
     "@types/mongoose": "^5.7.32",
     "@types/morgan": "^1.9.1",
+    "@types/winston": "^2.4.4",
     "typescript": "^3.9.7"
   },
   "scripts": {
