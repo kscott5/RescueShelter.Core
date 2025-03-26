@@ -30,3 +30,7 @@ package-lock.json
 
 yarn-error.log
 yarn.lock
+
+go.mod 
+go.sum
+*/**/*.go
