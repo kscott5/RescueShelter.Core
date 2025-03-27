@@ -1,6 +1,6 @@
 {
   "name": "rescueshelter.core",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Rescue Shelter Common Reports and Services functionality ",
   "main": "index.js",
   "repository": "https://github.com/kscott5/RescueShelter.Core",
@@ -12,8 +12,6 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "helmet": "^3.23.3",
-    "mongodb": "^3.5.9",
-    "mongoose": "^5.9.25",
     "morgan": "^1.10.0",
     "path": "^0.12.7",
     "winston": "^3.3.3",
@@ -23,15 +21,21 @@
     "@types/body-parser": "^1.19.0",
     "@types/express": "^4.17.7",
     "@types/helmet": "^0.0.47",
-    "@types/mongodb": "^3.5.25",
-    "@types/mongoose": "^5.7.32",
+    "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.1",
     "@types/winston": "^2.4.4",
-    "typescript": "^3.9.7"
+    "typescript": "^5.8.2"
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "compile": "yarn clean & tsc -p tsconfig.json",
-    "build": "cp ./src ./dist/ -r & cp ./public ./dist/ -r & cp README.MD ./dist/ & cp package.json ./dist/"
-  }
+    "compile": "npm run clean & tsc -p tsconfig.json",
+    "build": "npm publish"
+  },
+  "files": [
+    "README.MD",
+    "package.json",
+    "./public/**",
+    "./dist/**",
+    "index.js"
+  ]
 }
