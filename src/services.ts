@@ -5,10 +5,9 @@ let mongoose = new Mongoose()
 console.log(`mongoosejs version: ${mongoose.version}`);
 
 mongoose.set('debug', true);
-mongoose.set('useFindAndModify', false);
 
 const __connectionString = 'mongodb://localhost:27017/rescueshelter';
-const __connection = mongoose.createConnection(__connectionString, { useNewUrlParser: true , useUnifiedTopology: true, useCreateIndex: true} );
+const __connection = mongoose.createConnection(__connectionString);
 
 export const SECURITY_MODEL_NAME = "token";
 createMongooseModel(SECURITY_MODEL_NAME, 
