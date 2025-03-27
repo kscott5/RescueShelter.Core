@@ -15,9 +15,9 @@ declare let __dirname; // variable initialize by NodeJS Path Module
  * @param port number the express server exposes
  * @param middleWare array of functions that generator express application router
  * @param corsHostNames array of string with cross site approval
- * @param staticPath relative path of the static web content folder
+ * @param staticPath absolute path of the static web content folder
  */
-export function start(serverName: String = 'Rescue Shelter Core Server', portNumber: Number = 9999, middleWare: Array<Function> = [], corsHostNames: Array<string> = [], staticPath: string = "./public"): void {
+export function start(serverName: String = 'Rescue Shelter Core Server', portNumber: Number = 9999, middleWare: Array<Function> = [], corsHostNames: Array<string> = [], staticPath: string = null): void {
     /**
      * Express Http server for the Rescue Shelter App
      */
@@ -47,7 +47,7 @@ export function start(serverName: String = 'Rescue Shelter Core Server', portNum
         }
     }));
 
-    const publicPath = path.join(__dirname, (staticPath || "../public"));
+    const publicPath = staticPath || path.join(__dirname, "../public");
     apiServer.use(express.static(publicPath));
 
     if(middleWare === null || middleWare === undefined || middleWare.length == 0) {
