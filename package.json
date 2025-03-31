@@ -1,6 +1,6 @@
 {
   "name": "rescueshelter.core",
-  "version": "1.0.10",
+  "version": "2.0.0",
   "description": "Rescue Shelter Common Reports and Services functionality ",
   "main": "index.js",
   "repository": "https://github.com/kscott5/RescueShelter.Core",
@@ -29,13 +29,13 @@
   "scripts": {
     "clean": "rm -rf dist",
     "compile": "npm run clean & tsc -p tsconfig.json",
+    "esbuild": "npm run clean && npx esbuild --bundle src/index.ts --outdir=./dist --platform=node --target=node21",
     "build": "npm publish"
   },
   "files": [
     "README.MD",
     "package.json",
     "./public/**",
-    "./dist/**",
-    "index.js"
+    "./dist/**"
   ]
 }
