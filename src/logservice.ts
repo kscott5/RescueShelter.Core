@@ -1,5 +1,5 @@
 import * as winston from "winston";
-import DailyRotateFileTransportOptions from "winston-daily-rotate-file";
+require("winston-daily-rotate-file");
 
 /**
  * 
@@ -15,7 +15,7 @@ export function createLogService(serviceName: string) : winston.Logger {
             winston.format.json()
         ),
         transports: [
-            new (winston.transports.DailyRotateFile)({
+            winston.transports.DailyRotateFile({
                 json: true,
                 dirname: process.env?.NODE_ENV_LOG_DIR || '.',
                 filename: 'combined-%DATE%.log',
@@ -27,11 +27,8 @@ export function createLogService(serviceName: string) : winston.Logger {
         ]
     });
 
-    logger.clear();
     if(process.env?.NODE_ENV == 'development')
-        logger.add(new winston.transports.Console);
-    
-    logger.add(new winston.transports.File);
+        logger.add(new winston.transports.Console());
 
     return logger;
 }
