@@ -4,7 +4,8 @@ let mongoose = new Mongoose()
 
 console.log(`mongoosejs version: ${mongoose.version}`);
 
-mongoose.set('debug', true);
+if((process.env?.NODE_ENV || 'production') != 'production')
+    mongoose.set('debug', true);
 
 const __connectionString = 'mongodb://localhost:27017/rescueshelter';
 const __connection = mongoose.createConnection(__connectionString);
