@@ -1,4 +1,4 @@
-import { Mongoose, Connection} from "mongoose";
+import { Mongoose, Connection, Model} from "mongoose";
 
 const mongoose = new Mongoose()
 
@@ -20,9 +20,9 @@ connection.once("connected", () => {
     connection.close();
 });
 
-const tokenSchema = new mongoose.Schema({}, {strict: false});
+export const tokenSchema = new mongoose.Schema({}, {strict: false});
 
-const auditSchema = new mongoose.Schema({
+export const auditSchema = new mongoose.Schema({
     name: {type: String, required: true},
     sponsor_id: {type: {}, required: true},
     data: {type: {}, required: true},
@@ -30,7 +30,7 @@ const auditSchema = new mongoose.Schema({
 }, {strict: true}); 
 auditSchema.path("data").default(new Date());
 
-const sponsorSchema = new mongoose.Schema({        
+export const sponsorSchema = new mongoose.Schema({        
     firstname: {type: String},
     lastname: {type: String},
     useremail: {type: String, required: [true, '*'], unique: true},
@@ -60,7 +60,7 @@ sponsorSchema.path("audit").default(function(){
 });    
 //sponsorSchema.path("audit.sponssor_id").default(function(){return Date.now();});
 
-const animalSchema = new mongoose.Schema({
+export const animalSchema = new mongoose.Schema({
         name: {type: String, unique:true, required: [true, '*']},
         image: {
             content: String,
@@ -102,9 +102,26 @@ export function createFindOneAndUpdateOptions(fields?: Object|String, upsert: bo
 }
 
 /**
+ * @description Name of model
+ */
+export const ANIMALS = "animals";
+/**
+ * @description Name of model
+ */
+export const SPONSORS = "sponsors";
+/**
+ * @description Name of model
+ */
+export const TOKENS = "tokens";
+/**
+ * @description Name of model
+ */
+export const AUDITS = "audits";
+
+/**
  * @description Names in use on connection models and schemas
  */
-export type ModelName = "animal" | "audit" | "sponsor" |"token";
+export type ModelName = "animals" | "audits" | "sponsors" | "tokens";
 
 /**
  * @description create new database connection
