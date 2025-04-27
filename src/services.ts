@@ -1,24 +1,10 @@
 import { Mongoose, Connection, Model} from "mongoose";
 
 const mongoose = new Mongoose()
-
-console.log(`mongoosejs version: ${mongoose.version}`);
-
-if((process.env?.NODE_ENV || 'production') != 'production')
+if((process.env?.NODE_ENV || 'production') != 'production') {
+    console.debug(`mongoosejs version: ${mongoose.version}`);
     mongoose.set('debug', true);
-
-const connectionUri = process.env?.RS_CONNECTION_URI || 'mongodb://localhost:27017/rescueshelter';
-const connection = mongoose.createConnection(connectionUri);
-
-connection.once("connected", () => {
-    // create the model from the schema below
-    connection.model("animal", animalSchema);
-    connection.model("sponson", sponsorSchema);
-    connection.model("security", tokenSchema);
-    connection.model("audit", auditSchema);
-
-    connection.close();
-});
+}
 
 export const tokenSchema = new mongoose.Schema({}, {strict: false});
 
@@ -124,12 +110,30 @@ export const AUDITS_MODEL_NAME: string = "audits";
 export type ModelName = "animals" | "audits" | "sponsors" | "tokens";
 
 /**
+ * @description Connection options map
+ */
+export type CreateConnectionOptions = { 
+    connectionUrl?: string, 
+    databaseName?: string,
+    errorCallback?: Function
+};
+
+/**
  * @description create new database connection
  */
-export function createConnection(connectionUrl?: string) : Connection {
-    const connectionUri = connectionUrl || process.env?.RS_CONNECTION_URI || 'mongodb://localhost:27017/rescueshelter';
+export function createConnection(options?: CreateConnectionOptions) : Connection {
+    const databaseName = options?.databaseName || "rescueshelter";
+    const connectionUri = options?.connectionUrl || process.env?.RS_CONNECTION_URI || `mongodb://localhost:27017/${databaseName}`;
     const connection = mongoose.createConnection(connectionUri);
-    
+
+    connection.on("error", (error) => {
+        if(options?.errorCallback) {
+            options.errorCallback(error);
+        } else {
+            console.debug(`Core service catch mongoose error: ${error}`);
+        }
+    });
+
     return connection;
 }
 
