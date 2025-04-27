@@ -12,12 +12,13 @@ declare let __dirname; // variable initialize by NodeJS Path Module
 /**
  * 
  * @param serverName string of the express server name
- * @param port number the express server exposes
+ * @param portNumber number the express server exposes
  * @param middleWare array of functions that generator express application router
  * @param corsHostNames array of string with cross site approval
  * @param staticPath absolute path of the static web content folder
+ * @param [closeCallback=null] cleanup/dispose method before server closes. Example database.close();
  */
-export function start(serverName: String = 'Rescue Shelter Core Server', portNumber: Number = 9999, middleWare: Array<Function> = [], corsHostNames: Array<string> = [], staticPath: string = null): void {
+export function start(serverName: String = 'Rescue Shelter Core Server', portNumber: Number = 9999, middleWare: Array<Function> = [], corsHostNames: Array<string> = [], staticPath: string = null, closeCallback: Function = null): void {
     /**
      * Express Http server for the Rescue Shelter App
      */
@@ -51,20 +52,30 @@ export function start(serverName: String = 'Rescue Shelter Core Server', portNum
     apiServer.use(express.static(publicPath));
 
     if(middleWare === null || middleWare === undefined || middleWare.length == 0) {
-        console.log('{server}.middleware not initialized');
+        console.log(`${serverName}.middleware not initialized`);
         return;
     }
     middleWare.forEach((fn) => {
-        try {
-            fn(apiServer);
-        } catch {
-            console.log('Invalid function format. [HINT: ' + fn.name + '(app: express.Application)]');
+        if(typeof fn === "function") {
+            fn(apiServer)
+        } else {
+            // @ts-ignore
+            console.log(`Invalid function format. [HINT: ${fn.name} '(app: express.Application)]`);
         }
     });
 
     apiServer.listen(portNumber, () => {
-        console.log(serverName + ' listening on port: ' + portNumber);
-        console.log('wwwroot: ' + publicPath);
-        console.log('ctrl+z stops server listener');
+        console.log(`${serverName} + ' listening on port: ${portNumber}`);
+        console.log(`wwwroot: ${publicPath}`);
+        console.log(`ctrl+z stops server listener`);
+    });
+
+    process.on('SIGTERM', () => {
+        // @ts-ignore
+        apiServer.close(() => {
+            console.log(`${serverName} listening on port: ${portNumber} closed.`);
+            if(typeof closeCallback === "function")
+                closeCallback();
+        });
     });
 }

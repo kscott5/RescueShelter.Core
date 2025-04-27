@@ -1,21 +1,21 @@
-import { Mongoose, Schema, Model, Document } from "mongoose";
+import { Mongoose, Schema, Model, Document} from "mongoose";
 
-let mongoose = new Mongoose()
+const mongoose = new Mongoose()
 
 console.log(`mongoosejs version: ${mongoose.version}`);
 
 if((process.env?.NODE_ENV || 'production') != 'production')
     mongoose.set('debug', true);
 
-const __connectionString = 'mongodb://localhost:27017/rescueshelter';
-const __connection = mongoose.createConnection(__connectionString);
+const connectionUri = process.env?.RS_CONNECTION_URI || 'mongodb://localhost:27017/rescueshelter';
+const connection = mongoose.createConnection(connectionUri);
 
-export const SECURITY_MODEL_NAME = "token";
-createMongooseModel(SECURITY_MODEL_NAME, 
+const SECURITY_MODEL_NAME = "token";
+const securitySchema = createMongooseModel(SECURITY_MODEL_NAME, 
     createMongooseSchema({}, false /* disable schema strict */));
 
-export const TRACK_MODEL_NAME = "transaction";
-createMongooseModel(TRACK_MODEL_NAME, () => {
+const TRACK_MODEL_NAME = "audit";
+const trackSchema = createMongooseModel(TRACK_MODEL_NAME, () => {
     var schema = createMongooseSchema({
             name: {type: String, required: true},
             sponsor_id: {type: {}, required: true},
@@ -28,9 +28,8 @@ createMongooseModel(TRACK_MODEL_NAME, () => {
     return schema;
 });
 
-export const SPONSOR_MODEL_NAME = "sponsor";
-createMongooseModel(SPONSOR_MODEL_NAME, ()=>{
-    
+const SPONSOR_MODEL_NAME = "sponsor";
+const sponsorSchema = createMongooseModel(SPONSOR_MODEL_NAME, ()=>{    
     var question = createMongooseSchema({
         _id: false,
         question: {type: String, required: true},
@@ -72,8 +71,8 @@ createMongooseModel(SPONSOR_MODEL_NAME, ()=>{
     return schema;
 });
 
-export const ANIMAL_MODEL_NAME = "animal";
-createMongooseModel(ANIMAL_MODEL_NAME, ()=>{
+const ANIMAL_MODEL_NAME = "animal";
+const animalSchema = createMongooseModel(ANIMAL_MODEL_NAME, ()=>{
     var schema = createMongooseSchema({
         name: {type: String, unique:true, required: [true, '*']},
         image: {
@@ -92,36 +91,43 @@ createMongooseModel(ANIMAL_MODEL_NAME, ()=>{
         sponsors: {type: Array<String>()}
     });
     
-    schema.index({category_id: "number", name: "text", category: "text", description: "text", sponsors: "text"});
+    schema.index({category_id: "umber", name: "text", category: "text", description: "text", sponsors: "text"});
     schema.path("dates.created").default(function(){return Date.now();});
     schema.path("dates.modified").default(function(){return Date.now();});
     
     return schema;
 });    
 
-export const SYSTEM_UNAVAILABLE_MSG = "system unavailable. please try later.";
-export const SYSTEM_INVALID_USER_CREDENTIALS_MSG = "invalid useremail and/or password";
-export const SYSTEM_SESSION_EXPIRED = "login, current session expired.";
-
+/**
+ * @description Create a new mongoose schema
+ * 
+ * @param schemaDefinition 
+ * @param strictMode enables strict type reference
+ * @returns new mongoose.Schema
+ */
 export function createMongooseSchema(schemaDefinition: any, strictMode: boolean = true) {
     return new mongoose.Schema(schemaDefinition, {strict: strictMode});
 }
 
-export function createMongooseModel(modelName: string, modelSchema: Schema<any> | Function) 
+/**
+ * @description Creates a new mongoose model from the schema
+ * 
+ * @param name used in creation of new mongoose model with schema
+ * @param schema  a map or function that returns a map with schema defination
+ * @returns new mongoose model document specific to the collection
+ */
+export function createMongooseModel(name: ModelName, schema: Schema<any> | Function) 
 : Model<Document> {
-    if(__connection.models[modelName] !== undefined)
-        return __connection.models[modelName];
-
-    var schema = (typeof modelSchema == 'function')?  modelSchema(): modelSchema;
-
-    return __connection.model(modelName, schema);    
+    return connection.model(name, (typeof schema == 'function')?  schema(): schema);
 }
 
-export function getModel(modelName: string) : Model<Document> {    
-    if(__connection.models[modelName] !== undefined)
-        return __connection.models[modelName];
-
-    throw new Error(`${modelName} not a valid model name.`);    
+/**
+ * @description retrieves the model name
+ * @param name used in location of a readonly model
+ * @returns existing mongoose model document
+ */
+export function getModel(name: ModelName) : Model<Document> {    
+    return connection.model(name);
 }
 
 export function createFindOneAndUpdateOptions(fields?: Object|String, upsert: boolean = false) {
@@ -143,6 +149,33 @@ export function createFindOneAndUpdateOptions(fields?: Object|String, upsert: bo
     return options;
 }
 
+/**
+ * @description Names in use on connection models and schemas
+ */
+export type ModelName = "animal" | "audit" | "sponsor" |"token";
+
+/**
+ * @description Predefine schema on token model
+ */
+module.exports = securitySchema;
+
+/**
+ * @description Predefine audit schema on audit model
+ */
+module.exports = trackSchema;
+
+/**
+ * @description Prefined schema on sponsor model
+ */
+module.exports = sponsorSchema;
+
+/**
+ * @description Prefined schema on animal model
+ */
+module.exports = animalSchema;
+/**
+ * Pagaination class helper
+ */
 export class Pagination {
     public pages: Number;
     public pageIndex: Number;
@@ -155,6 +188,9 @@ export class Pagination {
     }
 } // end Pagination
 
+/**
+ * Json server response helpter
+ */
 export class JsonResponse {
     constructor(){}
 
