@@ -1,4 +1,4 @@
-import * as winston from "winston";
+const winston = require("winston");
 require("winston-daily-rotate-file");
 
 /**
@@ -6,7 +6,7 @@ require("winston-daily-rotate-file");
  * @param {string} serviceName is a label identifier for a message
  * @returns {winston.Logger}
  */
-export function createLogService(serviceName: string) : winston.Logger {    
+export function createLogService(serviceName: string)  {    
     let transports = [
         new winston.transports.DailyRotateFile({
             json: true,
@@ -35,6 +35,6 @@ export function createLogService(serviceName: string) : winston.Logger {
         ),
         transports: transports
     });
-    
+
     return logger;
 }

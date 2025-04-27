@@ -81,7 +81,7 @@ const animalSchema = createMongooseModel(ANIMAL_MODEL_NAME, ()=>{
         },
         endangered: Boolean,
         category: String,
-        category_id: Number,
+        category_id: {type: Number, index: true},
         description: String,
         data: {type: Array<{population: Number, created: Date}>()},
         dates: {
@@ -91,7 +91,7 @@ const animalSchema = createMongooseModel(ANIMAL_MODEL_NAME, ()=>{
         sponsors: {type: Array<String>()}
     });
     
-    schema.index({category_id: "umber", name: "text", category: "text", description: "text", sponsors: "text"});
+    schema.index({category_id: "asc", name: "text", category: "text", description: "text", sponsors: "text"});
     schema.path("dates.created").default(function(){return Date.now();});
     schema.path("dates.modified").default(function(){return Date.now();});
     
