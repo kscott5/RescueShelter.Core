@@ -104,19 +104,19 @@ export function createFindOneAndUpdateOptions(fields?: Object|String, upsert: bo
 /**
  * @description Name of model
  */
-export const ANIMALS = "animals";
+export const ANIMALS_MODEL_NAME: string = "animals";
 /**
  * @description Name of model
  */
-export const SPONSORS = "sponsors";
+export const SPONSORS_MODEL_NAME: string = "sponsors";
 /**
  * @description Name of model
  */
-export const TOKENS = "tokens";
+export const TOKENS_MODEL_NAME: string = "tokens";
 /**
  * @description Name of model
  */
-export const AUDITS = "audits";
+export const AUDITS_MODEL_NAME: string = "audits";
 
 /**
  * @description Names in use on connection models and schemas
