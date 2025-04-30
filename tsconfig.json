@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
-      "target": "es6",
+      "target": "ESNext",
       "allowJs": false,
       "esModuleInterop": true,
       "forceConsistentCasingInFileNames": true,
-      "module": "commonjs",
-      "moduleResolution": "node",
+      "module": "Preserve",
+      "moduleResolution": "bundler",
       "sourceMap": false,
       "outDir": "dist",
       "declaration": true,

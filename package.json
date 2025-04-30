@@ -27,10 +27,9 @@
     "typescript": "^5.8.2"
   },
   "scripts": {
-    "clean": "rm -rf dist",
-    "compile": "npm run clean & tsc -p tsconfig.json",
-    "esbuild": "npm run clean && npx esbuild --bundle src/index.ts --outdir=./dist --platform=node --target=node21",
-    "build": "npm publish"
+    "esbuild":  "npm run clean && npx --yes esbuild --bundle src/index.ts --outdir=./dist --platform=node --target=esnext",
+    "tsbuild":  "npm run clean && npx --yes tsc -p tsconfig.json",
+    "clean":    "rm -rf dist && npm ci"    
   },
   "files": [
     "README.MD",
