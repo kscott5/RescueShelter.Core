@@ -29,7 +29,7 @@
   "scripts": {
     "esbuild":  "npm run clean && npx --yes esbuild --bundle src/index.ts --outdir=./dist --platform=node --target=esnext",
     "tsbuild":  "npm run clean && npx --yes tsc -p tsconfig.json",
-    "clean":    "rm -rf dist && npm ci"    
+    "clean":    "rm -rf dist && npm install --prefer-dedupe"    
   },
   "files": [
     "README.MD",
