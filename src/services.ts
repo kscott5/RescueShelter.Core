@@ -1,4 +1,4 @@
-import { Mongoose, Connection, Model} from "mongoose";
+import { Mongoose, Connection} from "mongoose";
 
 const mongoose = new Mongoose()
 if((process.env?.NODE_ENV || 'production') != 'production') {
@@ -10,23 +10,27 @@ export const tokenSchema = new mongoose.Schema({}, {strict: false});
 
 export const auditSchema = new mongoose.Schema({
     name: {type: String, required: true},
-    sponsor_id: {type: {}, required: true},
+    sponsor_id: {type: mongoose.Types.ObjectId, required: true},
     data: {type: {}, required: true},
     date: {type: Date, required: true}
 }, {strict: true}); 
 auditSchema.path("data").default(new Date());
+
+export const securitySchema = new mongoose.Schema({
+    sponsor_id: {type: mongoose.Types.ObjectId, required: true},
+    password: {type: String, required: true},
+    questions: [{
+        _id: false, 
+        question: {type: String, required: true},
+        answer: {type: String, required: true}
+    }],
+});
 
 export const sponsorSchema = new mongoose.Schema({        
     firstname: {type: String},
     lastname: {type: String},
     useremail: {type: String, required: [true, '*'], unique: true},
     username: {type: String, unique: true},
-    security: {
-        _id: false,
-        password: {type: String, required: true},
-        questions: [{
-            _id: false, question: {type: String, required: true},answer: {type: String, required: true}}]
-    },
     photo: {type: String},
     audit: [
         {
@@ -95,6 +99,8 @@ export const ANIMALS_MODEL_NAME: string = "animals";
  * @description Name of model
  */
 export const SPONSORS_MODEL_NAME: string = "sponsors";
+export const SECURITY_MODEL_NAME: string = "secuity";
+
 /**
  * @description Name of model
  */
