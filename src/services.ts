@@ -19,11 +19,14 @@ auditSchema.path("data").default(new Date());
 export const securitySchema = new mongoose.Schema({
     sponsor_id: {type: mongoose.Types.ObjectId, required: true},
     password: {type: String, required: true},
-    questions: [{
-        _id: false, 
-        question: {type: String, required: true},
-        answer: {type: String, required: true}
-    }],
+    questions: {
+        enabled: {type: Boolean, default: false},
+        list: [{
+            _id: false, 
+            question: {type: String, required: true},
+            answer: {type: String, required: true}
+        }]
+    },
 });
 
 export const sponsorSchema = new mongoose.Schema({        
@@ -32,6 +35,7 @@ export const sponsorSchema = new mongoose.Schema({
     useremail: {type: String, required: [true, '*'], unique: true},
     username: {type: String, unique: true},
     photo: {type: String},
+    online: {type: Boolean, default: true},
     audit: [
         {
             _id: false,
