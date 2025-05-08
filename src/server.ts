@@ -1,7 +1,8 @@
 "use strict";
+import https from "node:https";
 
-import express = require("express");
-import cors = require("cors")
+import express from "express";
+import cors from "cors";
 
 import morgan from "morgan";
 import * as helmet from "helmet";
@@ -64,8 +65,8 @@ export function start(serverName: String = 'Rescue Shelter Core Server', portNum
         }
     });
 
-    apiServer.listen(portNumber, () => {
-        console.log(`${serverName} + ' listening on port: ${portNumber}`);
+    https.createServer(apiServer).listen(portNumber, () => {
+        console.log(`${serverName} listening on: https://localhost:${portNumber}`);
         console.log(`wwwroot: ${publicPath}`);
         console.log(`ctrl+z stops server listener`);
     });
@@ -73,7 +74,7 @@ export function start(serverName: String = 'Rescue Shelter Core Server', portNum
     process.on('SIGTERM', () => {
         // @ts-ignore
         apiServer.close(() => {
-            console.log(`${serverName} listening on port: ${portNumber} closed.`);
+            console.log(`${serverName} listening on port: https://localhost:${portNumber} closed.`);
             if(typeof closeCallback === "function")
                 closeCallback();
         });
