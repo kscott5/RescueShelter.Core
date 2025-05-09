@@ -10,14 +10,16 @@ export const tokenSchema = new mongoose.Schema({}, {strict: false});
 
 export const auditSchema = new mongoose.Schema({
     name: {type: String, required: true},
-    sponsor_id: {type: mongoose.Types.ObjectId, required: true},
+    // @ts-ignore
+    sponsor_id: {type: mongoose.ObjectId, required: true},
     data: {type: {}, required: true},
     date: {type: Date, required: true}
 }, {strict: true}); 
 auditSchema.path("data").default(new Date());
 
 export const securitySchema = new mongoose.Schema({
-    sponsor_id: {type: mongoose.Types.ObjectId, required: true},
+    // @ts-ignore
+    sponsor_id: {type: mongoose.ObjectId, required: true},
     password: {type: String, required: true},
     questions: {
         enabled: {type: Boolean, default: false},
