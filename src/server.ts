@@ -113,7 +113,8 @@ export function start(options: any = null): void {
         }
     };
     apiServer.use(cors(corsOptionsDelegate));
-
+    apiServer.options('*', cors(corsOptionsDelegate));
+    
     apiServer.use(helmet.contentSecurityPolicy({
         directives: {
             defaultSrc: ["'self'"],
