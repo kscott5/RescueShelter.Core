@@ -104,16 +104,25 @@ export function start(options: any = null): void {
         apiServer.use(morgan('dev'));
     }
 
-    const corsOptionsDelegate = function (req, callback) {
-        if (options.corsHostNames.includes(req.headers.origin)) {
-            callback(null, true);
-        }
-        else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    };
-    apiServer.use(cors(corsOptionsDelegate));
-    apiServer.options('*', cors(corsOptionsDelegate));
+    const corsOptions = {
+        origin: (req, callback) => {
+            if (options.corsHostNames.includes(req.headers.origin)) {
+                callback(null, true);
+            }
+            else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        methods: ['GET','POST', 'PUT'],
+        allowHeaders: ['Content-Type'],
+        exposedHeaders: [], // none
+        credentials: false,
+        maxAge: 3000, // seconds
+        preFlightContinue: true,
+        optionSuccessStatus: 210
+    }
+    apiServer.use(cors(corsOptions));
+    apiServer.options('*', cors(corsOptions));
     
     apiServer.use(helmet.contentSecurityPolicy({
         directives: {
