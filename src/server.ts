@@ -106,12 +106,9 @@ export function start(options: any = null): void {
 
     const corsOptions = {
         origin: (origin, callback) => {
-            if (options.corsHostNames.includes(origin)) {
-                callback(null, true);
-            }
-            else {
-                callback(new Error('Not allowed by CORS'));
-            }
+            callback(null, {
+                origin: options.corsHostNames.includes(origin)
+            });
         },
         methods: ['GET','POST', 'PUT'],
         allowHeaders: ['Content-Type'],
@@ -121,9 +118,7 @@ export function start(options: any = null): void {
         preFlightContinue: true,
         optionSuccessStatus: 210
     }
-    apiServer.use(cors(corsOptions));
-    apiServer.options('*', cors(corsOptions));
-    
+    apiServer.use(cors(corsOptions));   
     apiServer.use(helmet.contentSecurityPolicy({
         directives: {
             defaultSrc: ["'self'"],
