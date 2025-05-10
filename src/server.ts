@@ -105,8 +105,8 @@ export function start(options: any = null): void {
     }
 
     const corsOptions = {
-        origin: (req, callback) => {
-            if (options.corsHostNames.includes(req.headers.origin)) {
+        origin: (origin, callback) => {
+            if (options.corsHostNames.includes(origin)) {
                 callback(null, true);
             }
             else {

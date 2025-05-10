@@ -1,15 +1,13 @@
 {
     "compilerOptions": {
-      "target": "ESNext",
+      "target": "es6",
       "allowJs": false,
       "esModuleInterop": true,
       "forceConsistentCasingInFileNames": true,
-      "module": "Preserve",
-      "moduleResolution": "bundler",
+      "module": "commonjs",
+      "moduleResolution": "node",
       "sourceMap": false,
       "outDir": "dist",
-      "declaration": true,
-      "declarationDir": "dist"
     },
     "include": [
       "src"
