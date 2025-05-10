@@ -99,10 +99,13 @@ export function start(options: any = null): void {
     // ************************************
     //  Middleware sequential use important
     // ************************************
-    apiServer.use(morgan('dev'));
+    
+    if((process.env?.NODE_ENV || 'production') != 'production') {
+        apiServer.use(morgan('dev'));
+    }
 
     const corsOptionsDelegate = function (req, callback) {
-        if (options.corsHostNames.length === 0 || options.corsHostNames.indexOf(req.headers.origin) === 0) {
+        if (options.corsHostNames.includes(req.headers.origin)) {
             callback(null, true);
         }
         else {
