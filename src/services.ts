@@ -51,6 +51,7 @@ sponsorSchema.index({username: "text", useremail: "text"});
 sponsorSchema.path("audit").default(function(){
     return {
         modified: Date.now(),
+        // @ts-ignore
         sponsor_id: this._id,
     };
 });    
@@ -91,8 +92,10 @@ export function createFindOneAndUpdateOptions(fields?: Object|String, upsert: bo
     };
 
     /*Field selection. Equivalent to .select(fields).findOneAndUpdate()*/
-    if(fields) 
+    if(fields) {
+        // @ts-ignore
         options["fields"] = fields;
+    }
 
     return options;
 }

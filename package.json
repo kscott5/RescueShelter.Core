@@ -1,6 +1,6 @@
 {
   "name": "rescueshelter.core",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "Rescue Shelter Common Reports and Services functionality ",
   "main": "index.js",
   "repository": "https://github.com/kscott5/RescueShelter.Core",
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@types/body-parser": "1.19.5",
+    "@types/cors": "^2.8.18",
     "@types/express": "5.0.1",
     "@types/helmet": "0.0.47",
     "@types/morgan": "1.9.1",

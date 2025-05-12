@@ -1,14 +1,15 @@
 "use strict";
 import https from "node:https";
 import http from "node:http";
+import path from "node:path";
 
 import express from "express";
 import cors from "cors";
 
 import morgan from "morgan";
-import * as helmet from "helmet";
-import * as path from "path";
+import helmet from "helmet";
 
+// @ts-ignore
 declare let __dirname; // variable initialize by NodeJS Path Module
 
 const LOCALHOST_CERTIFICATE_KEY = `-----BEGIN PRIVATE KEY-----
@@ -91,7 +92,7 @@ export function start(options: any = null): void {
             cert: options?.server.cert || LOCALHOST_CERTIFICATE_BUFFER
     }};
 
-    /**
+        /**
      * Express Http server for the Rescue Shelter App
      */
     const apiServer = express();
@@ -105,7 +106,7 @@ export function start(options: any = null): void {
     }
 
     const corsOptions = {
-        origin: (origin, callback) => {
+        origin: (origin: string, callback: Function) => {
             callback(null, {
                 origin: options.corsHostNames.includes(origin)
             });
@@ -118,6 +119,8 @@ export function start(options: any = null): void {
         preFlightContinue: true,
         optionSuccessStatus: 210
     }
+
+    // @ts-ignore
     apiServer.use(cors(corsOptions));   
     apiServer.use(helmet.contentSecurityPolicy({
         directives: {
@@ -134,6 +137,8 @@ export function start(options: any = null): void {
         console.log(`${options.serverName}.middleware not initialized`);
         return;
     }
+
+    // @ts-ignore
     options.middleWare.forEach((fn) => {
         if(typeof fn === "function") {
             fn(apiServer)
