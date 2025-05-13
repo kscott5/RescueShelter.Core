@@ -1,7 +1,9 @@
-import server = require("./server");
-import services = require("./services");
-import { createLogService } from "./logservice";
+import * as server from "./server";
+import * as services from "./services";
+import * as createLogger from "./logservice";
 
-export {server as CoreServer};
-export {services as CoreServices};
-export {createLogService};
+export {
+    server,
+    services,
+    createLogger
+};

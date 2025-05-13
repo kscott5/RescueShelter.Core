@@ -1,12 +1,13 @@
 {
   "name": "rescueshelter.core",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "description": "Rescue Shelter Common Reports and Services functionality ",
   "main": "index.js",
   "repository": "https://github.com/kscott5/RescueShelter.Core",
   "author": "Karega K. Scott <kkscott@outlook.com>",
   "license": "LGPL-3.0-or-later",
   "private": false,
+  "type": "commonjs",
   "dependencies": {
     "body-parser": "2.2.0",
     "cors": "2.8.5",

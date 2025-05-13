@@ -78,18 +78,18 @@ const LOCALHOST_CERTIFICATE_BUFFER = Buffer.from(LOCALHOST_CERTIFICATE);
  *      @param [closeCallback=null] cleanup/dispose method before server closes. Example database.close();
  *  }
  */
-export function start(options: any = null): void {
+function start(options?: any): void {
     var options = {...options,
         middleWare: options?.middleWare || [], 
         corsHostNames: options?.corsHostNames || [], 
-        webRootPath: options.staticPath || path.join(__dirname, "../public"), 
+        webRootPath: options?.staticPath || path.join(__dirname, "../public"), 
         closeCallback: options?.closeCallback || null, 
-        server: {...options?.server, 
-            name: options?.server.name || 'Rescue Shelter Core Server', 
-            port: parseInt(options?.server.port || 9999), 
-            secure: options?.server.secure || true,
-            key: options?.server.key || LOCALHOST_KEY_BUFFER,
-            cert: options?.server.cert || LOCALHOST_CERTIFICATE_BUFFER
+        server: {...options?.server || {}, 
+            name: options.server?.name || 'Rescue Shelter Core Server', 
+            port: parseInt(options.server?.port || 9999), 
+            secure: options.server?.secure || true,
+            key: options.server?.key || LOCALHOST_KEY_BUFFER,
+            cert: options.server?.cert || LOCALHOST_CERTIFICATE_BUFFER
     }};
 
         /**
@@ -108,7 +108,8 @@ export function start(options: any = null): void {
     const corsOptions = {
         origin: (origin: string, callback: Function) => {
             callback(null, {
-                origin: options.corsHostNames.includes(origin)
+                // expect responsible use
+                origin: !options.corsHostNames.includes(origin)
             });
         },
         methods: ['GET','POST', 'PUT'],
@@ -134,7 +135,7 @@ export function start(options: any = null): void {
     apiServer.use(express.static(options.webRootPath));
 
     if(options.middleWare instanceof Array && options.middleWare.length == 0) {
-        console.log(`${options.serverName}.middleware not initialized`);
+        console.log(`${options.server.name} middleware [] is empty`);
         return;
     }
 
@@ -159,11 +160,24 @@ export function start(options: any = null): void {
         http.createServer(apiServer).listen(options.server.port, servermsg);
 
     process.on('SIGTERM', () => {
-        // @ts-ignore
-        apiServer.close(() => {
-            console.log(`${options.server.name} listening on port: http://localhost:${options.server.port} closed.`);
-            if(typeof options.closeCallback === "function")
-                options.closeCallback();
-        });
+        console.log(`${options.server.name} listening on port: http://localhost:${options.server.port} closed.`);
+        if(typeof options.closeCallback === "function")
+            options.closeCallback();
     });
+}
+
+/**
+ * @param options: {
+ *      @param server: creates secure https connection with { name:'', port: 9999, secure: true, key: 'localhost.key', cert: 'localhost.cert'}
+ *      @param middleWare array of functions that generator express application router
+ *      @param corsHostNames array of string with cross site approval
+ *      @param webRootPath absolute path of the static web content folder
+ *      @param [closeCallback=null] cleanup/dispose method before server closes. Example database.close();
+ *  }
+ */
+const startServer = start;
+
+export {
+    start,
+    startServer
 }

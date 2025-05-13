@@ -6,9 +6,9 @@ if((process.env?.NODE_ENV || 'production') != 'production') {
     mongoose.set('debug', true);
 }
 
-export const tokenSchema = new mongoose.Schema({}, {strict: false});
+const tokenSchema = new mongoose.Schema({}, {strict: false});
 
-export const auditSchema = new mongoose.Schema({
+const auditSchema = new mongoose.Schema({
     name: {type: String, required: true},
     // @ts-ignore
     sponsor_id: {type: mongoose.ObjectId, required: true},
@@ -17,7 +17,7 @@ export const auditSchema = new mongoose.Schema({
 }, {strict: true}); 
 auditSchema.path("data").default(new Date());
 
-export const securitySchema = new mongoose.Schema({
+const securitySchema = new mongoose.Schema({
     // @ts-ignore
     sponsor_id: {type: mongoose.ObjectId, required: true},
     password: {type: String, required: true},
@@ -31,7 +31,7 @@ export const securitySchema = new mongoose.Schema({
     },
 });
 
-export const sponsorSchema = new mongoose.Schema({        
+const sponsorSchema = new mongoose.Schema({        
     firstname: {type: String},
     lastname: {type: String},
     useremail: {type: String, required: [true, '*'], unique: true},
@@ -57,7 +57,7 @@ sponsorSchema.path("audit").default(function(){
 });    
 //sponsorSchema.path("audit.sponssor_id").default(function(){return Date.now();});
 
-export const animalSchema = new mongoose.Schema({
+const animalSchema = new mongoose.Schema({
         name: {type: String, unique:true, required: [true, '*']},
         image: {
             content: String,
@@ -79,7 +79,7 @@ animalSchema.index({category_id: "asc", name: "text", category: "text", descript
 animalSchema.path("dates.created").default(function(){return Date.now();});
 animalSchema.path("dates.modified").default(function(){return Date.now();});
 
-export function createFindOneAndUpdateOptions(fields?: Object|String, upsert: boolean = false) {
+function createFindOneAndUpdateOptions(fields?: Object|String, upsert: boolean = false) {
     // MongoDB https://mongodb.github.io/node-mongodb-native/3.2/api/Collection.html#findOneAndUpdate
     // Mongoose https://mongoosejs.com/docs/api.html#model_Model.findOneAndUpdate
     
@@ -103,26 +103,26 @@ export function createFindOneAndUpdateOptions(fields?: Object|String, upsert: bo
 /**
  * @description Name of model
  */
-export const ANIMALS_MODEL_NAME: string = "animals";
+const ANIMALS_MODEL_NAME: string = "animals";
 /**
  * @description Name of model
  */
-export const SPONSORS_MODEL_NAME: string = "sponsors";
-export const SECURITY_MODEL_NAME: string = "secuity";
+const SPONSORS_MODEL_NAME: string = "sponsors";
+const SECURITY_MODEL_NAME: string = "secuity";
 
 /**
  * @description Name of model
  */
-export const TOKENS_MODEL_NAME: string = "tokens";
+const TOKENS_MODEL_NAME: string = "tokens";
 /**
  * @description Name of model
  */
-export const AUDITS_MODEL_NAME: string = "audits";
+const AUDITS_MODEL_NAME: string = "audits";
 
 /**
  * @description Names in use on connection models and schemas
  */
-export type ModelName = "animals" | "audits" | "sponsors" | "tokens";
+export type ModelName = "animals" | "audits" | "sponsors" | "tokens" | string;
 
 /**
  * @description Connection options map
@@ -136,7 +136,7 @@ export type CreateConnectionOptions = {
 /**
  * @description create new database connection
  */
-export function createConnection(options?: CreateConnectionOptions) : Connection {
+function createConnection(options?: CreateConnectionOptions) : Connection {
     const databaseName = options?.databaseName || "rescueshelter";
     const connectionUri = options?.connectionUrl || process.env?.RS_CONNECTION_URI || `mongodb://localhost:27017/${databaseName}`;
     const connection = mongoose.createConnection(connectionUri);
@@ -155,7 +155,7 @@ export function createConnection(options?: CreateConnectionOptions) : Connection
 /**
  * Pagaination class helper
  */
-export class Pagination {
+class Pagination {
     public pages: Number;
     public pageIndex: Number;
     public documents: Array<any>;
@@ -170,7 +170,7 @@ export class Pagination {
 /**
  * Json server response helper
  */
-export class JsonResponse {
+class JsonResponse {
     constructor(){}
 
     createError(error: any) : any {
@@ -194,3 +194,20 @@ export class JsonResponse {
         }
     }
 } // end JsonResponse
+
+export  {
+    tokenSchema,
+    auditSchema,
+    securitySchema,
+    sponsorSchema,
+    animalSchema,
+    createFindOneAndUpdateOptions,
+    ANIMALS_MODEL_NAME,
+    SPONSORS_MODEL_NAME,
+    SECURITY_MODEL_NAME,
+    TOKENS_MODEL_NAME,
+    AUDITS_MODEL_NAME,
+    createConnection,
+    Pagination,
+    JsonResponse
+};
