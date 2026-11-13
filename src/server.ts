@@ -71,7 +71,7 @@ const LOCALHOST_CERTIFICATE_BUFFER = Buffer.from(LOCALHOST_CERTIFICATE);
 
 /**
  * @param options: {
- *      @param server: creates secure https connection with { name:'', port: 9999, secure: true, key: 'localhost.key', cert: 'localhost.cert'}
+ *      @param server: creates secure https connection with { name:'', secure: true, port: 443, key: 'localhost.key', cert: 'localhost.cert'}
  *      @param middleWare array of functions that generator express application router
  *      @param corsHostNames array of string with cross site approval
  *      @param webRootPath absolute path of the static web content folder
@@ -86,13 +86,13 @@ function start(options?: any): void {
         closeCallback: options?.closeCallback || null, 
         server: {...options?.server || {}, 
             name: options.server?.name || 'Rescue Shelter Core Server', 
-            port: parseInt(options.server?.port || 9999), 
             secure: options.server?.secure || true,
+            port: parseInt(options.server?.port || (options.server?.secure)? '443': '80'),
             key: options.server?.key || LOCALHOST_KEY_BUFFER,
             cert: options.server?.cert || LOCALHOST_CERTIFICATE_BUFFER
     }};
 
-        /**
+     /**
      * Express Http server for the Rescue Shelter App
      */
     const apiServer = express();
@@ -150,7 +150,7 @@ function start(options?: any): void {
     });
 
     const servermsg = () => {
-        console.log(`${options.server.name} listening on: ${(options.server.secure)? "https": "http"}://localhost:${options.server.port}`);
+        console.log(`${options.server.name} listener on ${(options.server.secure)? "https" : "http"}://::${options.server.port}`);
         console.log(`wwwroot: ${options.webRootPath}`);
         console.log(`ctrl+z stops server listener`);
     };
@@ -160,7 +160,7 @@ function start(options?: any): void {
         http.createServer(apiServer).listen(options.server.port, servermsg);
 
     process.on('SIGTERM', () => {
-        console.log(`${options.server.name} listening on port: http://localhost:${options.server.port} closed.`);
+        console.log(`${options.server.name} listener done.`);
         if(typeof options.closeCallback === "function")
             options.closeCallback();
     });
@@ -168,7 +168,7 @@ function start(options?: any): void {
 
 /**
  * @param options: {
- *      @param server: creates secure https connection with { name:'', port: 9999, secure: true, key: 'localhost.key', cert: 'localhost.cert'}
+ *      @param server: creates secure https connection with { name:'', secure: true, port: 443, key: 'localhost.key', cert: 'localhost.cert'}
  *      @param middleWare array of functions that generator express application router
  *      @param corsHostNames array of string with cross site approval
  *      @param webRootPath absolute path of the static web content folder

@@ -10,7 +10,7 @@ function createLogService(serviceName: string)  {
     let transports = [
         new winston.transports.DailyRotateFile({
             json: true,
-            dirname: process.env?.RESCUE_SHELTER_LOG_DIR || '.',
+            dirname: process.env?.RS_API_LOG_DIR || '.',
             filename: 'combined-%DATE%.log',
             datePattern: 'YYYY-MM-DD-HH',
             zippedArchive: true,
