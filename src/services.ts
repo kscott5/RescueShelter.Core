@@ -108,7 +108,7 @@ const ANIMALS_MODEL_NAME: string = "animals";
  * @description Name of model
  */
 const SPONSORS_MODEL_NAME: string = "sponsors";
-const SECURITY_MODEL_NAME: string = "secuity";
+const SECURITY_MODEL_NAME: string = "security";
 
 /**
  * @description Name of model
