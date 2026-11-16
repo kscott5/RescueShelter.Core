@@ -8,7 +8,6 @@ import cors from "cors";
 
 import morgan from "morgan";
 import helmet from "helmet";
-import { randomInt } from "node:crypto";
 import { JsonResponse } from "./services";
 
 // @ts-ignore
@@ -58,7 +57,7 @@ function getDefaultOptions() : any {
 		server: {
 			name: 'Rescue Shelter Core Server',
 			secure: false,
-			port: randomInt(1000,9999),
+			port: 8080,
 			key: '/absolute/path/cert.key',
 			cert: '/absolute/path/cert.pem'
 		},
