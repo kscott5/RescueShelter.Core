@@ -80,16 +80,16 @@ const LOCALHOST_CERTIFICATE_BUFFER = Buffer.from(LOCALHOST_CERTIFICATE);
  */
 function start(options?: any): void {
     var options = {...options,
-        middleWare: options?.middleWare || [], 
-        corsHostNames: options?.corsHostNames || [], 
-        webRootPath: options?.staticPath || path.join(__dirname, "../public"), 
-        closeCallback: options?.closeCallback || null, 
-        server: {...options?.server || {}, 
-            name: options.server?.name || 'Rescue Shelter Core Server', 
-            secure: options.server?.secure || true,
-            port: parseInt(options.server?.port || (options.server?.secure)? '443': '80'),
-            key: options.server?.key || LOCALHOST_KEY_BUFFER,
-            cert: options.server?.cert || LOCALHOST_CERTIFICATE_BUFFER
+        middleWare: options?.middleWare ?? [], 
+        corsHostNames: options?.corsHostNames ?? [], 
+        webRootPath: options?.staticPath ?? path.join(__dirname, "../public"), 
+        closeCallback: options?.closeCallback ?? null, 
+        server: {...options?.server ?? {}, 
+            name: options.server?.name ?? 'Rescue Shelter Core Server', 
+            secure: options.server?.secure ?? true,
+            port: parseInt(options.server?.port ?? (options.server?.secure)? '443': '80'),
+            key: options.server?.key ?? LOCALHOST_KEY_BUFFER,
+            cert: options.server?.cert ?? LOCALHOST_CERTIFICATE_BUFFER
     }};
 
      /**
