@@ -30,8 +30,11 @@ function healthMiddleWare(app: express.Application) {
 	
 	// @ts-ignore
 	app.use(async(req,res) => {
-		res.status(404);
-		res.send("Resource not found.");
+		res.status(200);
+
+		const jsonResponse = new JsonResponse();
+		const data = jsonResponse.createError("Resource not found");
+		res.json(data);
 	});
 
 }
@@ -121,8 +124,6 @@ function start(options: any): void {
 
     apiServer.use(express.static(options.webRootPath));
 
-	healthMiddleWare(apiServer);
-
     if(options.middleWare instanceof Array && options.middleWare.length == 0) {
         console.log(`${options.server.name} middleware [] is empty`);
     }
@@ -137,8 +138,10 @@ function start(options: any): void {
         }
     });
 
+	healthMiddleWare(apiServer);
+
 	const serverApi = `${(options.server.secure)? "https" : "http"}://localhost:${options.server.port}`;
-    const serverApiHealth = `$${serverApi}${BASE_API_URL}/health`;
+    const serverApiHealth = `${serverApi}${BASE_API_URL}/health`;
 
     const servermsg = () => {
         console.log(`${options.server.name} listening on ${serverApi}`);
