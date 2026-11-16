@@ -8,38 +8,77 @@ import cors from "cors";
 
 import morgan from "morgan";
 import helmet from "helmet";
+import { randomInt } from "node:crypto";
+import { JsonResponse } from "./services";
 
 // @ts-ignore
 declare let __dirname; // variable initialize by NodeJS Path Module
+const BASE_API_URL = '/api';
+
+function healthMiddleWare(app: express.Application) {
+	let router = express.Router({caseSensitive: true, mergeParams: true, strict: true});
+
+	// @ts-ignore
+	router.get('/health', async (req, res) => {
+		res.status(200);
+
+		const jsonResponse = new JsonResponse();
+		const data = jsonResponse.createData('Rescue Shelter Core Health Middleware Status: active');
+		res.json(data);
+	});
+
+	app.use(BASE_API_URL, router);
+	
+	// @ts-ignore
+	app.use(async(req,res) => {
+		res.status(404);
+		res.send("Resource not found.");
+	});
+
+}
+
+/**
+ *	returns the default server options
+ * 	
+ *	options: {
+ *     server: { name:'', secure: true, port: 443, key: 'localhost.key', cert: 'localhost.cert'}
+ *     middleWare: []  array of functions that generator 
+ *     		(app: express.Application) => { 
+ *     			router.get('', (req,res) => {}); 
+ *     			app.use('',router);
+ *     		}
+ *     corsHostNames: [] array of string with cross site approval
+ *     webRootPath: string absolute path of the static web content folder
+ *     closeCallback: ()={} optional - cleanup/dispose method before server closes. Example database.close();
+ *  }
+ *
+ */
+function getDefaultOptions() : any {
+    return {
+		server: {
+			name: 'Rescue Shelter Core Server',
+			secure: false,
+			port: randomInt(1000,9999),
+			key: '/absolute/path/cert.key',
+			cert: '/absolute/path/cert.pem'
+		},
+		middleWare: [], 
+        corsHostNames: [], 
+        webRootPath: path.join(__dirname, "../public"), 
+        closeCallback: null, 
+    };
+}
 
 /**
  * @param options: {
- *      @param server: creates secure https connection with { name:'', secure: true, port: 443, key: 'localhost.key', cert: 'localhost.cert'}
- *      @param middleWare array of functions that generator express application router
+ *      @param server: creates http and https connection with { name:'', secure: true, port: 443, key: 'localhost.key', cert: 'localhost.cert'}
+ *      @param middleWare array of functions that generator express application with router
  *      @param corsHostNames array of string with cross site approval
  *      @param webRootPath absolute path of the static web content folder
  *      @param [closeCallback=null] cleanup/dispose method before server closes. Example database.close();
  *  }
  */
-function start(options?: any): void {
-	if(options?.server?.secure && options?.server?.key == false) {
-		console.log("options.server.key and options.server.cert missing");
-		return;
-	}
-
-    var options = {...options,
-        middleWare: options?.middleWare ?? [], 
-        corsHostNames: options?.corsHostNames ?? [], 
-        webRootPath: options?.staticPath ?? path.join(__dirname, "../public"), 
-        closeCallback: options?.closeCallback ?? null, 
-        server: {...options?.server ?? {}, 
-            name: options.server?.name ?? 'Rescue Shelter Core Server', 
-            secure: options.server?.secure ?? true,
-            port: parseInt(options.server?.port ?? (options.server?.secure)? '443': '80'),
-            key: options.server?.key,
-            cert: options.server?.cert
-    }};
-
+function start(options: any): void {
      /**
      * Express Http server for the Rescue Shelter App
      */
@@ -83,9 +122,10 @@ function start(options?: any): void {
 
     apiServer.use(express.static(options.webRootPath));
 
+	healthMiddleWare(apiServer);
+
     if(options.middleWare instanceof Array && options.middleWare.length == 0) {
         console.log(`${options.server.name} middleware [] is empty`);
-        return;
     }
 
     // @ts-ignore
@@ -98,10 +138,14 @@ function start(options?: any): void {
         }
     });
 
+	const serverApi = `${(options.server.secure)? "https" : "http"}://localhost:${options.server.port}`;
+    const serverApiHealth = `$${serverApi}${BASE_API_URL}/health`;
+
     const servermsg = () => {
-        console.log(`${options.server.name} listener on ${(options.server.secure)? "https" : "http"}://::${options.server.port}`);
+        console.log(`${options.server.name} listening on ${serverApi}`);
+        console.log(`${options.server.name} health listening on ${serverApiHealth}`);
         console.log(`wwwroot: ${options.webRootPath}`);
-        console.log(`ctrl+z stops server listener`);
+        console.log(`ctrl+z stops server listeners`);
     };
 
     (options.server.secure)? 
@@ -127,6 +171,8 @@ function start(options?: any): void {
 const startServer = start;
 
 export {
+	BASE_API_URL,
     start,
-    startServer
+    startServer,
+	getDefaultOptions
 }
