@@ -54,12 +54,13 @@ function start(options?: any): void {
     }
 
     const corsOptions = {
-        origin: (origin: string, callback: Function) => {
-            callback(null, {
-                // expect responsible use
-                origin: !options.corsHostNames.includes(origin)
-            });
-        },
+		origin: (origin: string, callback: Function) => {
+    		if (!origin || options.corsHostNames.includes(origin)) {
+        		callback(null, true);
+    		} else {
+        		callback(new Error("Origin not allowed"));
+    		}
+		},
         methods: ['GET','POST', 'PUT'],
         allowHeaders: ['Content-Type'],
         exposedHeaders: [], // none
