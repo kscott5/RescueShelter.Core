@@ -88,7 +88,7 @@ function createFindOneAndUpdateOptions(fields?: Object|String, upsert: boolean =
         upsert: upsert,    // new models are not allowed
         maxTimeMS:  1000, // 10 seconds maximum wait
         rawResult: true,  // returns the raw result from the MongoDB driver
-        strict: false     // ensures only model schema value saved
+        strict: true     // ensures only model schema value saved
     };
 
     /*Field selection. Equivalent to .select(fields).findOneAndUpdate()*/
@@ -175,7 +175,7 @@ class JsonResponse {
 
     createError(error: any) : any {
         return {
-            ok: true,
+            ok: false,
             data: error,
         }
     }

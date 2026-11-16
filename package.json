@@ -31,7 +31,8 @@
   "scripts": {
     "esbuild": "npm run clean && npx --yes esbuild --bundle src/index.ts --outdir=./dist --platform=node --target=esnext",
     "tsbuild": "npm run clean && npx --yes tsc -p tsconfig.json",
-    "clean": "rm -rf dist && npm install --prefer-dedupe"
+	"clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && tsc -p tsconfig.json"
   },
   "files": [
     "README.MD",

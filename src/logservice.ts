@@ -19,7 +19,7 @@ function createLogService(serviceName: string)  {
     ];
 
     // development allow stdout on console
-    if((process.env?.NODE_ENV || 'production') != 'prodution')
+    if(process.env?.NODE_ENV !== 'production')
         transports.push(new winston.transports.Console());
 
     // set log level production info only and others debug
