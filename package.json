@@ -32,7 +32,8 @@
     "esbuild": "npm run clean && npx --yes esbuild --bundle src/index.ts --outdir=./dist --platform=node --target=esnext",
     "tsbuild": "npm run clean && npx --yes tsc -p tsconfig.json",
 	"clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
-    "build": "npm run clean && tsc -p tsconfig.json"
+    "build": "npm run clean && tsc -p tsconfig.test.json",
+	"test": "npm run build && node --test ./dist"
   },
   "files": [
     "README.MD",
